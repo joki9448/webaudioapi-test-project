@@ -26,6 +26,10 @@ function setupEventListeners() {
 
     volume.addEventListener('input', e => {
         const value = parseInt(e.target.value)
+        gainNode.gain.setTargetAtTime(value, context.currentTime, .01)
+    })
+    bass.addEventListener('input', e => {
+        const value = parseInt(e.target.value)
         bassEQ.gain.setTargetAtTime(value, context.currentTime, .01)
     })
 }

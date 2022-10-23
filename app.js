@@ -13,6 +13,17 @@ const bassEQ = new BiquadFilterNode(context, {
     frequency: 500,
     gain: bass.value
 })
+const midEQ = new BiquadFilterNode(context, {
+    type: 'peaking',
+    Q: Math.SQRT1_2,
+    frequency: 1500,
+    gain: mid.value
+})
+const trebleEQ = new BiquadFilterNode(context, {
+    type: 'highshelf',
+    frequency: 3000,
+    gain: treble.value
+})
 
 // console.log(context);
 
@@ -32,6 +43,14 @@ function setupEventListeners() {
         const value = parseInt(e.target.value)
         bassEQ.gain.setTargetAtTime(value, context.currentTime, .01)
     })
+    mid.addEventListener('input', e => {
+        const value = parseInt(e.target.value)
+        midEQ.gain.setTargetAtTime(value, context.currentTime, .01)
+    })
+    treble.addEventListener('input', e => {
+        const value = parseInt(e.target.value)
+        trebleEQ.gain.setTargetAtTime(value, context.currentTime, .01)
+    })
 }
 
 
@@ -42,6 +61,8 @@ async function setupContext() {
     }
     const source = context.createMediaStreamSource(guitar)
     source
+        .connect(trebleEQ)
+        .connect(midEQ)
         .connect(bassEQ)
         .connect(gainNode)
         .connect(analyserNode)
